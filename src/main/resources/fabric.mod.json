@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "wearablebackpacks",
   "version": "${version}",
 
   "name": "Example Mod",
@@ -19,11 +19,14 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "com.nyfaria.wearablebackpacks.WearableBackpacks"
+    ],
+    "client": [
+      "com.nyfaria.wearablebackpacks.WearableBackpacksClient"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "wearablebackpacks.mixins.json"
   ],
 
   "depends": {
