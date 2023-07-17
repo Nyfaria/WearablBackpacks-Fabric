@@ -13,10 +13,6 @@ public class SimpleArmorRenderer<T extends BackpackItem & IAnimatable> extends G
         super(new SimpleModel<>("armor"));
     }
 
-    @Override
-    public void render(float partialTicks, MatrixStack stack, VertexConsumer bufferIn, int packedLightIn) {
-        super.render(partialTicks, stack, bufferIn, packedLightIn);
-    }
 
 
 

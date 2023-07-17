@@ -35,7 +35,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -83,7 +82,7 @@ public class BackpackItem extends ArmorItem implements IAnimatable, DyeableItem 
 
                 @Override
                 public Text getDisplayName() {
-                    return new TranslatableText(backpackItemStack.getItem().getTranslationKey());
+                    return Text.translatable(backpackItemStack.getItem().getTranslationKey());
                 }
 
                 @Override

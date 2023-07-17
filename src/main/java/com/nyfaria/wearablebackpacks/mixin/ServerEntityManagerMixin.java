@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.entity.EntityLike;
@@ -29,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 @Mixin(ServerEntityManager.class)
 public class ServerEntityManagerMixin {
@@ -92,7 +92,7 @@ public class ServerEntityManagerMixin {
             }
         }
 
-        Collections.shuffle(list, pRand);
+        Collections.shuffle(list, new java.util.Random());
         return list;
     }
 
@@ -128,6 +128,6 @@ public class ServerEntityManagerMixin {
         }
 
         pStacks.addAll(list);
-        Collections.shuffle(pStacks, pRand);
+        Collections.shuffle(pStacks, new java.util.Random());
     }
 }

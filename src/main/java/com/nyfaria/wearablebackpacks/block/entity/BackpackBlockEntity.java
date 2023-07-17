@@ -17,7 +17,6 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -168,7 +167,7 @@ public class BackpackBlockEntity extends LockableContainerBlockEntity implements
 
     @Override
     protected Text getContainerName() {
-        return new LiteralText("Backpack");
+        return Text.literal("Backpack");
     }
 
     @Override

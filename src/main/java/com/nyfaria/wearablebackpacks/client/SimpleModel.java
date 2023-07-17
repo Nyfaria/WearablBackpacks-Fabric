@@ -16,17 +16,17 @@ public class SimpleModel<T extends IAnimatable> extends AnimatedGeoModel<T> {
         this.animations = new Identifier(WearableBackpacks.MODID, "animations/" + folder + "/backpack.animation.json");
     }
     @Override
-    public Identifier getModelLocation(T object) {
+    public Identifier getModelResource(T object) {
         return model;
     }
 
     @Override
-    public Identifier getTextureLocation(T object) {
+    public Identifier getTextureResource(T object) {
         return texture;
     }
 
     @Override
-    public Identifier getAnimationFileLocation(T animatable) {
+    public Identifier getAnimationResource(T animatable) {
         return animations;
     }
 }

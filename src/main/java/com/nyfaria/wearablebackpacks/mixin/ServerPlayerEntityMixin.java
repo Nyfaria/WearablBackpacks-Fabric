@@ -3,26 +3,16 @@ package com.nyfaria.wearablebackpacks.mixin;
 import com.mojang.authlib.GameProfile;
 import com.nyfaria.wearablebackpacks.WearableBackpacks;
 import com.nyfaria.wearablebackpacks.block.entity.BackpackBlockEntity;
-import com.nyfaria.wearablebackpacks.item.BackpackItem;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
 
-    public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
-        super(world, pos, yaw, profile);
+    public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
+        super(world, pos, yaw, gameProfile, publicKey);
     }
 
     @Inject(method = "onDeath", at = @At(value = "HEAD"))
