@@ -9,4 +9,5 @@ public class WearableBackpacksConfig {
     public boolean canOpenWithHand = false;
     public boolean canOpenWhileEquipped = false;
     public int entityBackpackChance = 10;
+    public boolean shouldEntitiesSpawnWithBackpack = true;
 }

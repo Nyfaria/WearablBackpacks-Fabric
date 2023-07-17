@@ -4,31 +4,24 @@ import com.google.common.collect.Lists;
 import com.nyfaria.wearablebackpacks.WearableBackpacks;
 import com.nyfaria.wearablebackpacks.util.InventoryUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextType;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.server.world.ServerEntityManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.entity.EntityLike;
-import net.minecraft.world.entity.EntityLookup;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -43,7 +36,8 @@ public class ServerEntityManagerMixin {
 
 
     @Inject(method = "addEntity(Lnet/minecraft/world/entity/EntityLike;Z)Z", at = @At("HEAD"))
-    public void spawnWithBackPack(EntityLike entity, boolean existing, CallbackInfoReturnable<Boolean> cir){
+    public void spawnWithBackPack(EntityLike entity, boolean existing, CallbackInfoReturnable<Boolean> cir) {
+        if (!WearableBackpacks.getInstance().CONFIG.shouldEntitiesSpawnWithBackpack) return;
         if (entity instanceof MobEntity livingEntity) {
             if (livingEntity.getType().isIn(WearableBackpacks.BACKPACKABLE)) {
                 if (livingEntity.getWorld().random.nextInt(100) < WearableBackpacks.getInstance().CONFIG.entityBackpackChance) {
@@ -56,24 +50,26 @@ public class ServerEntityManagerMixin {
             }
         }
     }
+
     private static void unpackLootTable(Identifier lootTable, World level, BlockPos worldPosition, long lootTableSeed, ItemStack backpackStack) {
         if (lootTable != null && level.getServer() != null) {
             LootTable loottable = level.getServer().getLootManager().getTable(lootTable);
             LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) level)).parameter(LootContextParameters.ORIGIN, Vec3d.ofCenter(worldPosition)).random(lootTableSeed);
             SimpleInventory inventory = new SimpleInventory(WearableBackpacks.getInstance().CONFIG.columns * WearableBackpacks.getInstance().CONFIG.rows);
-            fill(inventory,lootcontext$builder.build(LootContextTypes.CHEST), loottable);
+            fill(inventory, lootcontext$builder.build(LootContextTypes.CHEST), loottable);
             InventoryUtils.toTag(inventory);
             backpackStack.getOrCreateNbt().put("PlayerInventory", InventoryUtils.toTag(inventory));
         }
 
     }
+
     private static void fill(SimpleInventory inventory, LootContext pContext, LootTable pTable) {
         List<ItemStack> list = pTable.generateLoot(pContext);
         Random random = pContext.getRandom();
         List<Integer> list1 = getAvailableSlots(inventory, random);
         shuffleAndSplitItems(list, list1.size(), random);
 
-        for(ItemStack itemstack : list) {
+        for (ItemStack itemstack : list) {
             if (list1.isEmpty()) {
                 return;
             }
@@ -86,10 +82,11 @@ public class ServerEntityManagerMixin {
         }
 
     }
+
     private static List<Integer> getAvailableSlots(SimpleInventory pInventory, Random pRand) {
         ObjectArrayList<Integer> list = new ObjectArrayList();
 
-        for(int i = 0; i < pInventory.size(); ++i) {
+        for (int i = 0; i < pInventory.size(); ++i) {
             if (pInventory.getStack(i).isEmpty()) {
                 list.add(i);
             }
@@ -98,11 +95,12 @@ public class ServerEntityManagerMixin {
         Collections.shuffle(list, pRand);
         return list;
     }
+
     private static void shuffleAndSplitItems(List<ItemStack> pStacks, int pEmptySlotsCount, Random pRand) {
         List<ItemStack> list = Lists.newArrayList();
         Iterator<ItemStack> iterator = pStacks.iterator();
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             ItemStack itemstack = iterator.next();
             if (itemstack.isEmpty()) {
                 iterator.remove();
@@ -112,7 +110,7 @@ public class ServerEntityManagerMixin {
             }
         }
 
-        while(pEmptySlotsCount - pStacks.size() - list.size() > 0 && !list.isEmpty()) {
+        while (pEmptySlotsCount - pStacks.size() - list.size() > 0 && !list.isEmpty()) {
             ItemStack itemstack2 = list.remove(MathHelper.nextInt(pRand, 0, list.size() - 1));
             int i = MathHelper.nextInt(pRand, 1, itemstack2.getCount() / 2);
             ItemStack itemstack1 = itemstack2.split(i);
